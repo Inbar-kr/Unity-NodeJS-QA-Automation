@@ -69,8 +69,12 @@ npm start
 ### 2. Unity Client Setup
 
 * **Unity Version:** Developed and tested on **Unity 2018.4.36f1** (LTS).
-* **Option A (Quick Run):** Launch the pre-compiled executable at `Unity_Client/Build/Unity_Client.exe`.
-* **Option B (Development):** 
+* **Option A (Quick Run - No Unity Required):** 
+    1. Go to the **[Releases](https://github.com/Inbar-kr/Unity-NodeJS-QA-Automation/releases/tag/v1.0.0)** tab on the right side of this GitHub page.
+    2. Download `Unity_Client_v1.0.zip` and extract it to a folder.
+    3. Run `Unity_Client.exe`.
+    *Note: Ensure the Node.js server is running first before launching the client to capture the initial handshake.*
+* **Option B (Development Mode):** 
     1. Open the `Unity_Client` folder as a project in Unity.
     2. Load `Assets/Scenes/SampleScene.unity`.
     3. Press **Play**.
@@ -79,6 +83,8 @@ npm start
 ---
 
 ## 🧪 Command Reference Table
+
+The server automatically cycles through the following commands. The Unity client parses the JSON and provides visual feedback:
 
 | Command (`action`) | Unity Visual Response | Expected Client Reply |
 | --- | --- | --- |
@@ -90,9 +96,15 @@ npm start
 
 ---
 
-## 📊 Automated Reporting
+## 📊 Testing & Reporting
 
-This project uses `jest-html-reporter`. After running `npm test`, a professional HTML report is generated at:
+### 📝 Comprehensive Test Plan (QA Strategy)
+A dedicated test plan was created to outline the testing strategy, including functional happy-paths, connectivity edge cases (e.g., network drops, handshake interruptions), and data integrity validation. 
+👉 **[Read the full TEST_PLAN.md here](TEST_PLAN.md)**
+
+### 🤖 Automated Integration Tests
+The server includes automated integration tests using **Jest**. To enhance test visibility and provide a better QA experience, I implemented `jest-html-reporter`. 
+After running `npm test`, a professional HTML report is generated at:
 
 `Server/test-report.html`
 
@@ -100,11 +112,11 @@ It provides a visual breakdown of test durations and pass/fail status for the co
 
 ---
 
-## ⚠️ Known Issues 
+## 🔍 Known Issues & Areas for Improvement 
 
 * **Auto-Reconnect:** Currently, if the server restarts, the Unity client does not automatically attempt to reconnect.
 * **Security:** The current WebSocket implementation is unencrypted (`ws://`). For production-level field testing, `WSS` (Secure WebSockets) should be implemented.
-* **Command Acknowledgement:** While Unity logs the execution, adding a unique `Command_ID` feedback loop to the server would enhance tracking of asynchronous tasks.
+* **Schema Validation:** The Unity C# JSON parser blindly accepts the incoming data. Adding strict schema validation (checking for missing or malformed fields) would prevent potential runtime errors if the server sends corrupted JSON.
 
 ---
 
