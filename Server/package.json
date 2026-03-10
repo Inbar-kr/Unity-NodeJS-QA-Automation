@@ -1,0 +1,41 @@
+{
+  "name": "qa-server-assignment",
+  "version": "1.0.0",
+  "description": "Server-Unity communication testing task",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "websocket",
+    "server",
+    "qa",
+    "testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-html-reporter": "^3.10.0"
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      [
+        "jest-html-reporter",
+        {
+          "pageTitle": "Server QA Test Report",
+          "outputPath": "./test-report.html",
+          "includeFailureMsg": true,
+          "includeConsoleLog": true
+        }
+      ]
+    ]
+  }
+}
