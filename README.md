@@ -7,12 +7,6 @@
 > A bidirectional WebSocket communication system between a **Node.js Server** and a **Unity 3D Client** using WebSockets.
 ---
 
-## 📽️ Live Demonstration
-
-*(Replace this placeholder with your actual recorded GIF to show the server-client handshake and crystal transitions!)*
-
----
-
 ## 🏗️ Architecture Overview
 
 The system follows a decoupled architecture where the server acts as the "Test Controller" and the Unity client acts as the "System Under Test" (SUT).
@@ -78,7 +72,7 @@ npm start
     1. Open the `Unity_Client` folder as a project in Unity.
     2. Load `Assets/Scenes/SampleScene.unity`.
     3. Press **Play**.
-    4. Use the **"Run Sequence"** button in the bottom-right corner to re-trigger the test flow.
+Use the **"Run Sequence"** button in the bottom-right corner to re-trigger the test flow.
 
 ---
 
