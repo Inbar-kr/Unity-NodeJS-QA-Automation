@@ -15,39 +15,63 @@ function startServer(port = process.env.PORT || 8080) {
     wss.on('connection', (ws) => {
         console.log("Connection detected. Awaiting 'Unity_Ready'...");
 
+        const expectedSequence = [
+            "System Standby",
+            "Test Mode",
+            "Ad Delivered",
+            "High Latency",
+            "Timeout Error"
+        ];
+        
+        let currentStep = 0;
+
         /**
          * Helper function to wrap a command in a JSON structure and send it.
          * @param {string} actionName - The specific command to be executed by Unity.
          */
         const sendCommand = (actionName) => {
             const command = {
-                // Generate a random ID for tracking/logging purposes
                 id: "CMD_" + Math.floor(Math.random() * 1000),
                 action: actionName
             };
             
-            // Send the serialized JSON command to the client
             ws.send(JSON.stringify(command));
             console.log(`[Sent to Unity] ${actionName}`);
         };
 
         /**
+         * Helper function to process the sequence based on responses.
+         */
+        const sendNextCommand = () => {
+            if (currentStep < expectedSequence.length) {
+                setTimeout(() => {
+                    if (ws.readyState === WebSocket.OPEN) {
+                        sendCommand(expectedSequence[currentStep]);
+                    }
+                }, 1000); 
+            } else {
+                console.log("✅ All test commands executed successfully.");
+            }
+        };
+
+        /**
          * Event: Message received from the client.
-         * Logic: The server waits for a specific 'Unity_Ready' signal before
-         * triggering the automated sequence of test commands.
+         * Logic: The server waits for 'Unity_Ready' to begin.
+         * Then, it waits for an acknowledgment before sending the next command in the sequence.
          */
         ws.on('message', (message) => {
             const msgStr = message.toString();
             console.log(`[Message from Unity] ${msgStr}`);
 
             if (msgStr === "Unity_Ready") {
-                console.log("Handshake successful! Sending commands...");
-
-                setTimeout(() => sendCommand("System Standby"), 1000);
-                setTimeout(() => sendCommand("Test Mode"), 4000);
-                setTimeout(() => sendCommand("Ad Delivered"), 7000);
-                setTimeout(() => sendCommand("High Latency"), 10000);
-                setTimeout(() => sendCommand("Timeout Error"), 13000);
+                console.log("Handshake successful! Starting command sequence...");
+                currentStep = 0;
+                sendNextCommand();
+            } 
+            else if (msgStr.startsWith("Action Executed:")) {
+                console.log(`Unity confirmed execution. Advancing to next step.`);
+                currentStep++;
+                sendNextCommand();
             }
         });
     });
